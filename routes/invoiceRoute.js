@@ -120,7 +120,7 @@ router.get('/', verify, async (request, response) => {
             })
     }
 
-})
+});
 
 router.put('/:id', verify, async (request, response) => {
     if (!request.body) {
