@@ -60,8 +60,20 @@ const invoiceValidation = (data) => {
     return validationSchema.validate(data);
 }
 
+const customerStatementsValidation = (data) => {
+    const validationSchema = Joi.object({
+        customer_name: Joi.string().min(6).max(255),
+        paid_amount: Joi.number().max(1000000),
+        payment_method: Joi.string().min(4).max(255).required(),
+        customer_pan_no: Joi.string().alphanum().min(6).max(255).required(),
+        payment_date: Joi.string().required().min(9)
+    });
+    return validationSchema.validate(data);
+};
+
 module.exports.registerValidation = registerValidation;
 module.exports.loginValidation = loginValidation;
 module.exports.customerValidation = customerValidation;
 module.exports.productValidation = productValidation;
 module.exports.invoiceValidation = invoiceValidation;
+module.exports.customerStatementsValidation = customerStatementsValidation;

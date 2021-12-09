@@ -7,7 +7,7 @@ const Products = require('../models/Products');
 
 
 router.post('/', verify, async (request, response) => {
-    var customer_name = 'Testing';
+    var customer_name;
     const { error } = invoiceValidation(request.body);
     if (error) return response.status(400).send(error.details[0].message);
     const billExist = await Invoice.findOne({ bill_no: request.body.bill_no });

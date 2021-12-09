@@ -21,7 +21,6 @@ const invoiceSchema = new mongoose.Schema({
     bill_no: {
         type: Number,
         min: 1,
-
     },
     products: [
         {

@@ -10,6 +10,7 @@ const customersRoute = require('./routes/customerRoute');
 const productsRoute = require('./routes/productRoute');
 const stockRoute = require('./routes/stockRoute');
 const invoiceRoute = require('./routes/invoiceRoute');
+const customerStatementRoute = require('./routes/customerStatementRoute');
 
 dotenv.config();
 
@@ -28,6 +29,7 @@ app.use('/api/customers', customersRoute);
 app.use('/api/products', productsRoute);
 app.use('/api/stock', stockRoute);
 app.use('/api/invoice', invoiceRoute);
+app.use('/api/customer_statements', customerStatementRoute);
 
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
