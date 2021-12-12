@@ -50,6 +50,22 @@ router.get('/', verify, async (request, response) => {
                 response.status(500).send({ message: "Some error occured" })
             })
     }
+    else if (request.query.name) {
+        const name = request.query.name;
+
+        Products.find({ name: name})
+            .then(product => {
+                if (!product) {
+                    response.status(404).send({ message: "Product with that name not found" })
+                }
+                else {
+                    response.send(product);
+                }
+            })
+            .catch(err => {
+                response.status(500).send({ message: "Some error occured" })
+            })
+    }
     else {
         Products.find()
             .then(product => {

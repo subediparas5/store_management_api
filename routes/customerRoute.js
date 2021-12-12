@@ -48,6 +48,21 @@ router.get('/', verify, async (request, response) => {
                 response.status(500).send({ message: "Some error occured" })
             })
     }
+    else if (request.query.name) {
+        const name = request.query.name;
+        Customers.find({ name: name })
+            .then(data => {
+                if (!data) {
+                    response.status(404).send({ message: "Customer with that name not found" })
+                }
+                else {
+                    response.send(data);
+                }
+            })
+            .catch(err => {
+                response.status(500).send({ message: "Some error occured" })
+            })
+    }
     else {
         Customers.find()
             .then(customer => {

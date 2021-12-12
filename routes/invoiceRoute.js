@@ -110,6 +110,22 @@ router.get('/', verify, async (request, response) => {
                 response.status(500).send({ message: "Some error occured" })
             })
     }
+    else if (request.query.pan_no) {
+        const pan = request.query.pan_no;
+
+        Invoice.find({ pan_no:pan})
+            .then(invoice => {
+                if (!invoice) {
+                    response.status(404).send({ message: "Invoice not found" });
+                }
+                else {
+                    response.send(invoice);
+                }
+            })
+            .catch(err => {
+                response.status(500).send({ message: "Some error occured" })
+            })
+    }
     else {
         Invoice.find()
             .then(invoice => {
