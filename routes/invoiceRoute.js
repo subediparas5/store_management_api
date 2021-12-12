@@ -113,7 +113,7 @@ router.get('/', verify, async (request, response) => {
     else if (request.query.pan_no) {
         const pan = request.query.pan_no;
 
-        Invoice.find({ pan_no:pan})
+        Invoice.find({ pan_no: pan })
             .then(invoice => {
                 if (!invoice) {
                     response.status(404).send({ message: "Invoice not found" });
