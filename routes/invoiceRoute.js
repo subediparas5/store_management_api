@@ -49,16 +49,24 @@ router.post('/', verify, async (request, response) => {
     let total_selling_price = 0;
     let product_exists;
     for (let i = 0; i < invoice.products.length; i++) {
-        //Find product's selling price
-
+        //Get product's selling price from db
+        var product_in_stock;
         await Products.findOne({ name: invoice.products[i].product_name, unit: invoice.products[i].product_unit, quantity: invoice.products[i].unit_quantity, piece_in_box: invoice.products[i].product_piece_in_box })
             .then(product => {
                 if (!product) {
-                    response.status(404).send({ message: `Product ${i} not found.` })
+                    response.status(404).send({ message: `Product ${i + 1} not found.` })
                 }
                 else {
-                    invoice.products[i].product_price = product.selling_price;
-                    invoice.products[i].net_price = invoice.products[i].product_price * invoice.products[i].product_quantity;
+                    product_in_stock = product.stock;
+                    if ((product_in_stock - invoice.products[i].product_quantity) >= 0) {
+                        invoice.products[i].product_price = product.selling_price;
+                        invoice.products[i].net_price = invoice.products[i].product_price * invoice.products[i].product_quantity;
+                        product_in_stock -= invoice.products[i].product_quantity;
+                    }
+                    else {
+                        response.status(400).send({ message: error.message || "Product quantity exceeded stock quantity. Check stock and retry" })
+                    }
+
                 }
             })
             .catch(error => {
@@ -85,6 +93,21 @@ router.post('/', verify, async (request, response) => {
             invoice.discount = (discount_percentage * invoice.selling_price_without_vat) / 100;
             invoice.vat = (invoice.selling_price_without_vat - invoice.discount) * 0.13;
             invoice.selling_price_with_vat = (invoice.selling_price_without_vat - invoice.discount) + invoice.vat;
+            // decrease bought amount of products from stock
+            for (let i = 0; i < invoice.products.length; i++) {
+                await Products.findOne({ name: invoice.products[i].product_name, unit: invoice.products[i].product_unit, quantity: invoice.products[i].unit_quantity, piece_in_box: invoice.products[i].product_piece_in_box })
+                    .then(product => {
+                        product_in_stock = product.stock;
+                        if ((product_in_stock - invoice.products[i].product_quantity) >= 0) {
+                            product_in_stock -= invoice.products[i].product_quantity;
+                            console.log(product_in_stock);
+                            Products.findOneAndUpdate({ name: invoice.products[i].product_name, unit: invoice.products[i].product_unit, quantity: invoice.products[i].unit_quantity, piece_in_box: invoice.products[i].product_piece_in_box }, { stock: product_in_stock }, { useFindAndModify: false })
+                                .then(data => {
+                                    console.log("stock update successfull");
+                                });
+                        }
+                    })
+            }
             const savedInvoice = await invoice.save();
             response.send({ bill_no: savedInvoice.bill_no });
         } catch (err) {

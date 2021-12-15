@@ -10,6 +10,8 @@ router.post('/', verify, async (request, response) => {
     if (error) return response.status(400).send(error.details[0].message);
     //find customer name using pan number
     var customer_name;
+    var total_credit;
+    var customer_id;
     await Customers.findOne({ pan_number: request.body.customer_pan_no })
         .then(customer => {
             if (!customer) {
@@ -17,6 +19,8 @@ router.post('/', verify, async (request, response) => {
             }
             else {
                 customer_name = customer.name;
+                total_credit = customer.credit;
+                customer_id = customer.id;
             }
         });
 
@@ -30,6 +34,12 @@ router.post('/', verify, async (request, response) => {
     try {
         customer_statements.customer_name = customer_name;
         const saved_customer_statements = await customer_statements.save();
+        total_credit -= saved_customer_statements.paid_amount;
+        // console.log(`${customer_id} + ${total_credit}`);
+        await Customers.findOneAndUpdate({ pan_number: request.body.customer_pan_no }, { credit: total_credit }, { useFindAndModify: false })
+            .then(data => {
+                console.log("Customer credit update successfull");
+            })
         response.send({ customer_statement: saved_customer_statements._id });
     } catch (err) {
         response.status(400).send(err);
