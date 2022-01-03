@@ -71,9 +71,21 @@ const customerStatementsValidation = (data) => {
     return validationSchema.validate(data);
 };
 
+const salaryValidation = (data) => {
+    const validationSchema = Joi.object({
+        staff_name: Joi.string().min(6).max(255).required(),
+        staff_phone: Joi.number().min(99999999).max(9999999999).required(),
+        paid_amount: Joi.number.required(),
+        cheque_no: Joi.string().min(2),
+        month: Joi.date().required()
+    });
+    return validationSchema.validate(data);
+}
+
 module.exports.registerValidation = registerValidation;
 module.exports.loginValidation = loginValidation;
 module.exports.customerValidation = customerValidation;
 module.exports.productValidation = productValidation;
 module.exports.invoiceValidation = invoiceValidation;
+module.exports.salaryValidation = salaryValidation;
 module.exports.customerStatementsValidation = customerStatementsValidation;

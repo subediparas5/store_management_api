@@ -11,12 +11,13 @@ const productsRoute = require('./routes/productRoute');
 const stockRoute = require('./routes/stockRoute');
 const invoiceRoute = require('./routes/invoiceRoute');
 const customerStatementRoute = require('./routes/customerStatementRoute');
+const salaryRoute = require('./routes/salaryRoute');
 
 dotenv.config();
 
 //conenct to db
 mongoose.connect(process.env.DB_CONNECT, () => {
-    console.log("Connected from whitelisted IP");
+    console.log("Connected from whitelisted IP.");
 });
 
 //Middleware
@@ -24,6 +25,7 @@ app.use(express.json());
 
 //route middlewares
 app.use('/api/user', authRoute);
+app.use('/api/salary', salaryRoute);
 app.use('/api/posts', postRoute);
 app.use('/api/customers', customersRoute);
 app.use('/api/products', productsRoute);
