@@ -22,7 +22,7 @@ const customerValidation = (data) => {
     const validationSchema = Joi.object({
         name: Joi.string().min(6).max(255).required(),
         credit: Joi.number().min(0).max(1000000),
-        phone: Joi.number().min(9000000000).max(9999999999).required(),
+        phone: Joi.number().min(99999999).max(9999999999).required(),
         location: Joi.string().min(6).max(255).required(),
         pan_no: Joi.string().alphanum().min(6).max(255).required(),
     });
