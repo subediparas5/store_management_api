@@ -8,7 +8,8 @@ router.post('/pay', verify, async (request, response) => {
         staff_phone: request.body.staff_phone,
         paid_amount: request.body.paid_amount,
         cheque_no: request.body.cheque_no,
-        month: request.body.month
+        month: request.body.month,
+        remarks:request.body.remarks
     });
     try {
         const savedSalary = await salary.save();

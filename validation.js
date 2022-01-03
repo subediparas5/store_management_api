@@ -77,7 +77,8 @@ const salaryValidation = (data) => {
         staff_phone: Joi.number().min(99999999).max(9999999999).required(),
         paid_amount: Joi.number.required(),
         cheque_no: Joi.string().min(2),
-        month: Joi.date().required()
+        month: Joi.date().required(),
+        remarks: Joi.string().required().min(5).max(255)
     });
     return validationSchema.validate(data);
 }

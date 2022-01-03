@@ -24,6 +24,11 @@ const salarySchema = new mongoose.Schema({
     month: {
         type: Date,
         default: Date.now,
+    },
+    remarks: {
+        type: String,
+        minlength: 5,
+        maxlength:255
     }
 });
 
