@@ -34,5 +34,5 @@ app.use('/api/invoice', invoiceRoute);
 app.use('/api/customer_statements', customerStatementRoute);
 
 app.listen(port, () => {
-    console.log(/*`Server running on http://localhost:${port}`*/);
+    console.log(`Server running on ${port}`);
 })
